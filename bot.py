@@ -64,4 +64,4 @@ async def on_message(message):
     await client.send_message(message.channel, "Query By <@{}>".format(id))      
       
 keep_alive()
-client.run("NTM1NDQ5NDI5ODY0NjExODQw.DyIWaw.F0KyCrvQfy0HTyvWvQNN3OnlWHI")
+client.run("KEY")
