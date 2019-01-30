@@ -15,8 +15,9 @@ from kepp_alive import keep_alive
 Client = discord.Client() 
 client = commands.Bot(command_prefix = "!")
 
-clientt = MongoClient('mongodb://localhost:27017')
-db = clientt['test-database'] 
+MongoURI = 'mongodb://abhishek:abhishek1@ds247290.mlab.com:47290/chatter_bot_db'
+clientt = MongoClient(MongoURI)
+db = clientt['chatter_bot_db'] 
 
 users = db['users']
 
@@ -84,19 +85,11 @@ async def on_message(message):
     response = createuser.createUser(id, cc, cf)
     await client.send_message(message.channel, response)
     await client.send_message(message.channel, "Query By <@{}>".format(id))
-  
-  if ar[0].upper() == "!GETRATING":
-    find = users.find_one({'discord': id})
-    response = "Your Codechef Handle : **{0}** and Codeforces Handle : **{1}** has a rating of **{2}**".format(find['codechef'], find['codeforces'], find['rating'])
-    await client.send_message(message.channel, response)
-    await client.send_message(message.channel, "Query By <@{}>".format(id))
-
-  if ar[0].upper() == "!UPDATEROLES":
     grandmaster = []
     master = []
     expert = []
     unassigned = []
-    find = users.find()
+    find = users.find().sort('rating', -1)
     for use in find:
       if len(grandmaster) < 1:
         grandmaster.append(use['discord'])
@@ -110,7 +103,9 @@ async def on_message(message):
     Grandmaster = []
     Master = []
     Expert = []
+    Unassigned = []
     for i in server.members:
+      Unassigned.append(i)
       if i.id in grandmaster:
         Grandmaster.append(i)
         continue
@@ -120,9 +115,6 @@ async def on_message(message):
       if i.id in expert:
         Expert.append(i)
         continue
-    await client.send_message(message.channel, len(grandmaster))
-    await client.send_message(message.channel, len(master))
-    await client.send_message(message.channel, len(expert))
     role = discord.utils.get(server.roles, name = 'unassigned')
     for member in server.members:
       rem = []
@@ -140,26 +132,103 @@ async def on_message(message):
       try:
         await client.remove_roles(member, *rem)
       except:
-        await client.send_message(message.channel, member)
+        print("SHIT")
+      role = discord.utils.get(server.roles, name = 'Grandmaster')
+      for member in Grandmaster:
+        if member in Unassigned:
+          Unassigned.remove(member)
+        await client.add_roles(member, role)
+      role = discord.utils.get(server.roles, name = 'Master')  
+      for member in Master:
+        if member in Unassigned:
+          Unassigned.remove(member)
+        await client.add_roles(member, role)
+      role = discord.utils.get(server.roles, name = 'Expert')
+      for member in Expert:
+        if member in Unassigned:
+          Unassigned.remove(member)
+        await client.add_roles(member, role)
+      role = discord.utils.get(server.roles, name = 'unassigned')
+      for member in Unassigned:
+        await client.add_roles(member, role) 
 
-    role = discord.utils.get(server.roles, name = 'Grandmaster')
-    print(role)
-    await client.send_message(message.channel, role)
-    for member in Grandmaster:
-      await client.add_roles(member, role)
-    role = discord.utils.get(server.roles, name = 'Master')  
-    for member in Master:
-      await client.add_roles(member, role)
-    role = discord.utils.get(server.roles, name = 'Expert')
-    print(role)
-    await client.send_message(message.channel, role)
-    for member in Expert:
-      await client.add_roles(member, role)
+  
+  if ar[0].upper() == "!GETRATING":
+    find = users.find_one({'discord': id})
+    response = "Your Codechef Handle : **{0}** and Codeforces Handle : **{1}** has a rating of **{2}**".format(find['codechef'], find['codeforces'], find['rating'])
+    await client.send_message(message.channel, response)
+    await client.send_message(message.channel, "Query By <@{}>".format(id))
+
+  if ar[0].upper() == "!UPDATEROLES":
+    grandmaster = []
+    master = []
+    expert = []
+    unassigned = []
+    find = users.find().sort('rating', -1)
+    for use in find:
+      if len(grandmaster) < 1:
+        grandmaster.append(use['discord'])
+        continue
+      if len(master) < 2:
+        master.append(use['discord'])
+        continue
+      if len(expert) < 5:
+        expert.append(use['discord'])
+        continue
+    Grandmaster = []
+    Master = []
+    Expert = []
+    Unassigned = []
+    for i in server.members:
+      Unassigned.append(i)
+      if i.id in grandmaster:
+        Grandmaster.append(i)
+        continue
+      if i.id in master:
+        Master.append(i)
+        continue
+      if i.id in expert:
+        Expert.append(i)
+        continue
     role = discord.utils.get(server.roles, name = 'unassigned')
-    print(role)
-    await client.send_message(message.channel, role)
-    for member in unassigned:
-      await client.add_roles(member, role)
+    for member in server.members:
+      rem = []
+      if "admin" in member.roles:
+        continue
+      if "Bot" in member.roles:
+        continue 
+      if len(member.roles) == 0:
+        unassigned.append(member)
+      for i in member.roles:
+        j = i
+        print(j, end = ' ')
+        if j != "@everyone" and j != "admin":
+          rem.append(j)
+      try:
+        await client.remove_roles(member, *rem)
+      except:
+        print("SHIT")
+
+      role = discord.utils.get(server.roles, name = 'Grandmaster')
+      for member in Grandmaster:
+        if member in Unassigned:
+          Unassigned.remove(member)
+        await client.add_roles(member, role)
+      role = discord.utils.get(server.roles, name = 'Master')  
+      for member in Master:
+        if member in Unassigned:
+          Unassigned.remove(member)
+        await client.add_roles(member, role)
+      role = discord.utils.get(server.roles, name = 'Expert')
+      for member in Expert:
+        if member in Unassigned:
+          Unassigned.remove(member)
+        await client.add_roles(member, role)
+      role = discord.utils.get(server.roles, name = 'unassigned')
+      for member in Unassigned:
+        await client.add_roles(member, role) 
+
+    
         
 keep_alive()
 client.run("NTM1NDQ5NDI5ODY0NjExODQw.DzMRqA.9ROgoqNKXnS7fhwRDyb3ak-jGBM")

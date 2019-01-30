@@ -1,8 +1,8 @@
 from pymongo import MongoClient
 from pprint import pprint
 
-client = MongoClient('mongodb://localhost:27017')
-db = client['test-database'] 
+clientt = MongoClient('mongodb://abhishek:abhishek1@ds247290.mlab.com:47290/chatter_bot_db')
+db = clientt['users'] 
 
 users = db['users']
 print(users)

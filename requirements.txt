@@ -33,6 +33,7 @@ PyJWT==1.5.3
 pymacaroons==0.13.0
 PyNaCl==1.1.2
 pyOpenSSL==17.5.0
+pymongo==3.7.2
 pyparsing==2.2.0
 pyRFC3339==1.0
 requests==2.20.1

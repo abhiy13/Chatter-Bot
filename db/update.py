@@ -4,9 +4,9 @@ from pprint import pprint
 sys.path.insert(0, '../rating_fetch/')
 # sys.path.insert(0, './')
 import cc, cf, hr
-
-client = MongoClient('mongodb://localhost:27017')
-db = client['test-database'] 
+MongoURI = 'mongodb://abhishek:abhishek1@ds247290.mlab.com:47290/chatter_bot_db'
+client = MongoClient(MongoURI)
+db = client['chatter_bot_db'] 
 
 users = db['users']
 
