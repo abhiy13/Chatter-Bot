@@ -231,4 +231,4 @@ async def on_message(message):
     
         
 keep_alive()
-client.run("NTM1NDQ5NDI5ODY0NjExODQw.DzMRqA.9ROgoqNKXnS7fhwRDyb3ak-jGBM")
+client.run("YOUR KEY")
