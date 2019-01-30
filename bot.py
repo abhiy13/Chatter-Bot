@@ -15,7 +15,7 @@ from kepp_alive import keep_alive
 Client = discord.Client() 
 client = commands.Bot(command_prefix = "!")
 
-MongoURI = 'mongodb://abhishek:abhishek1@ds247290.mlab.com:47290/chatter_bot_db'
+MongoURI = 'Your URI'
 clientt = MongoClient(MongoURI)
 db = clientt['chatter_bot_db'] 
 
