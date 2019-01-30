@@ -4,7 +4,7 @@ from pprint import pprint
 sys.path.insert(0, '../rating_fetch/')
 # sys.path.insert(0, './')
 import cc, cf, hr
-MongoURI = 'mongodb://abhishek:abhishek1@ds247290.mlab.com:47290/chatter_bot_db'
+MongoURI = 'YOur URI'
 client = MongoClient(MongoURI)
 db = client['chatter_bot_db'] 
 
