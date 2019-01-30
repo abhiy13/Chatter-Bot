@@ -1,7 +1,7 @@
 from pymongo import MongoClient
 from pprint import pprint
 
-clientt = MongoClient('mongodb://abhishek:abhishek1@ds247290.mlab.com:47290/chatter_bot_db')
+clientt = MongoClient('Your URI')
 db = clientt['users'] 
 
 users = db['users']
