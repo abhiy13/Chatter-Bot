@@ -3,8 +3,8 @@ import requests
 from bs4 import BeautifulSoup as BS
 
 def get_rating(username):
-  url = 'https://www.codechef.com/users/' + username
   try:
+    url = 'https://www.codechef.com/users/' + username
     page = requests.get(url)
     soap = BS(page.text , 'html.parser')
     ratings = soap.find_all('div' , class_ = 'rating-container')

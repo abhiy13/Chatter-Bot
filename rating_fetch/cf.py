@@ -3,8 +3,8 @@ import requests
 from bs4 import BeautifulSoup as BS
 
 def get_rating(username):
-  url = 'https://codeforces.com/profile/' + username
   try:
+    url = 'https://codeforces.com/profile/' + username
     page = requests.get(url)
     soap = BS(page.text , 'html.parser')
     '''

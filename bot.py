@@ -9,7 +9,6 @@ import math
 import sys
 sys.path.insert(0, './rating_fetch/')
 sys.path.insert(0, './db/')
-import cc, cf, hr, createuser, update
 from kepp_alive import keep_alive
 
 Client = discord.Client() 
@@ -28,6 +27,7 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
+  import cc, cf, createuser, update
   ar = message.content.split()
   id = message.author.id
   server = client.get_server(id="512977453061242899")
@@ -35,10 +35,10 @@ async def on_message(message):
     x = cc.get_rating(ar[1])
     if(x == -1) :
       await client.send_message(message.channel, "CC ID Not Found")
+      await client.send_message(message.channel, "Query By <@{}>".format(id))
     else:
       await client.send_message(message.channel, x)
-    await client.send_message(message.channel, "Query By <@{}>".format(id))
-  
+      await client.send_message(message.channel, "Query By <@{}>".format(id))
   '''
   if(ar[0].upper() == "!HR"):
     x = hr.get_rating(ar[1])
@@ -49,7 +49,7 @@ async def on_message(message):
   if(ar[0].upper() == "!CF"):
     x = cf.get_rating(ar[1])
     if x == -1:
-      await client.send_message(message.channel, "CC ID Not Found")      
+      await client.send_message(message.channel, "CF ID Not Found")      
     else:
       await client.send_message(message.channel, x)
     await client.send_message(message.channel, "Query By <@{}>".format(id))
