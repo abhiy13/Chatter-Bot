@@ -7,7 +7,6 @@ def get_rating(username):
   try:
     page = requests.get(url)
     soap = BS(page.text , 'html.parser')
-
     ratings = soap.find_all('div' , class_ = 'rating-container')
     rat = ratings[0]
     x = rat.a.text

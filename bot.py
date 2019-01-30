@@ -33,17 +33,25 @@ async def on_message(message):
   server = client.get_server(id="512977453061242899")
   if(ar[0].upper() == "!CC"):
     x = cc.get_rating(ar[1])
-    await client.send_message(message.channel, x)
+    if(x == -1) :
+      await client.send_message(message.channel, "CC ID Not Found")
+    else:
+      await client.send_message(message.channel, x)
     await client.send_message(message.channel, "Query By <@{}>".format(id))
   
+  '''
   if(ar[0].upper() == "!HR"):
     x = hr.get_rating(ar[1])
     await client.send_message(message.channel, x)
     await client.send_message(message.channel, "Query By <@{}>".format(id))
-  
+  '''
+
   if(ar[0].upper() == "!CF"):
     x = cf.get_rating(ar[1])
-    await client.send_message(message.channel, x)
+    if x == -1:
+      await client.send_message(message.channel, "CC ID Not Found")      
+    else:
+      await client.send_message(message.channel, x)
     await client.send_message(message.channel, "Query By <@{}>".format(id))
   
   if(ar[0].upper() == "!POW"):
@@ -88,7 +96,6 @@ async def on_message(message):
     grandmaster = []
     master = []
     expert = []
-    unassigned = []
     find = users.find().sort('rating', -1)
     for use in find:
       if len(grandmaster) < 1:
@@ -105,6 +112,8 @@ async def on_message(message):
     Expert = []
     Unassigned = []
     for i in server.members:
+      if "Bot" in i.roles:
+        continue
       Unassigned.append(i)
       if i.id in grandmaster:
         Grandmaster.append(i)
@@ -118,21 +127,16 @@ async def on_message(message):
     role = discord.utils.get(server.roles, name = 'unassigned')
     for member in server.members:
       rem = []
-      if "admin" in member.roles:
-        continue
       if "Bot" in member.roles:
         continue 
-      if len(member.roles) == 0:
-        unassigned.append(member)
       for i in member.roles:
-        j = i
-        print(j, end = ' ')
-        if j != "@everyone" and j != "admin":
-          rem.append(j)
+        if i != "admin":
+          rem.append(i)
       try:
         await client.remove_roles(member, *rem)
       except:
         print("SHIT")
+
       role = discord.utils.get(server.roles, name = 'Grandmaster')
       for member in Grandmaster:
         if member in Unassigned:
@@ -180,6 +184,8 @@ async def on_message(message):
     Expert = []
     Unassigned = []
     for i in server.members:
+      if "Bot" in i.roles:
+        continue
       Unassigned.append(i)
       if i.id in grandmaster:
         Grandmaster.append(i)
@@ -227,8 +233,7 @@ async def on_message(message):
       role = discord.utils.get(server.roles, name = 'unassigned')
       for member in Unassigned:
         await client.add_roles(member, role) 
+      await client.send_message(message.channel, "Query By <@{}>".format(id))
 
-    
-        
 keep_alive()
-client.run("YOUR KEY")
+client.run("NTM1NDQ5NDI5ODY0NjExODQw.DzMRqA.9ROgoqNKXnS7fhwRDyb3ak-jGBM")
