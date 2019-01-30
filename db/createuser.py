@@ -5,7 +5,7 @@ sys.path.insert(0, '../rating_fetch/')
 # sys.path.insert(0, './')
 import cc, cf
 
-MongoURI = 'mongodb://abhishek:abhishek1@ds247290.mlab.com:47290/chatter_bot_db'
+MongoURI = 'Your URI'
 client = MongoClient(MongoURI)
 db = client['chatter_bot_db'] 
 
