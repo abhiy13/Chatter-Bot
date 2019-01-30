@@ -31,6 +31,15 @@ async def on_message(message):
   ar = message.content.split()
   id = message.author.id
   server = client.get_server(id="512977453061242899")
+  
+  if ar[0].upper() == "!HELP":
+    response = "Hey, Bot this Side\nThe bot has been developed by AbhiY13 and you can contribute by heading to the github repository https://github.com/AbhiY98/chatter-Bot\n"
+    response1 = "The following are some commands of this bot,\n `!pow a b` returns a^b\n`!mul args..` you can put in multiple arguments and it will multiply the values for you\n"
+    response2 = "`!fact x` returns x factorial\n`!cc handle` returns codechef rating for handle\n`!cf handle` returns cf rating for handle\n`!sethandle cf_handle cc_handle` registers your codechef and codeforces handles and assigns you a role\n"
+    response3 = "`!getrating` to know your rating\n Features like updation and others will be added soon.\nIf you would like to contribute please head over to the Github Repository"
+    wts = response + response1 + response2 + response3
+    await client.send_message(message.channel, wts)
+  
   if(ar[0].upper() == "!CC"):
     x = cc.get_rating(ar[1])
     if(x == -1) :
@@ -112,7 +121,8 @@ async def on_message(message):
     Expert = []
     Unassigned = []
     for i in server.members:
-      if "Bot" in i.roles:
+      ll = [str(x).upper() for x in i.roles]
+      if "BOT" in ll:
         continue
       Unassigned.append(i)
       if i.id in grandmaster:
@@ -127,10 +137,11 @@ async def on_message(message):
     role = discord.utils.get(server.roles, name = 'unassigned')
     for member in server.members:
       rem = []
-      if "Bot" in member.roles:
-        continue 
+      ll = [str(x).upper() for x in member.roles]
+      if "BOT" in ll:
+        continue
       for i in member.roles:
-        if i != "admin":
+        if str(i) != "admin":
           rem.append(i)
       try:
         await client.remove_roles(member, *rem)
@@ -141,33 +152,54 @@ async def on_message(message):
       for member in Grandmaster:
         if member in Unassigned:
           Unassigned.remove(member)
+        await client.remove_roles(member, *member.roles)
         await client.add_roles(member, role)
       role = discord.utils.get(server.roles, name = 'Master')  
       for member in Master:
         if member in Unassigned:
           Unassigned.remove(member)
+        await client.remove_roles(member, *member.roles)
         await client.add_roles(member, role)
       role = discord.utils.get(server.roles, name = 'Expert')
       for member in Expert:
         if member in Unassigned:
           Unassigned.remove(member)
+        await client.remove_roles(member, *member.roles)
         await client.add_roles(member, role)
       role = discord.utils.get(server.roles, name = 'unassigned')
       for member in Unassigned:
+        await client.remove_roles(member, *member.roles)
         await client.add_roles(member, role) 
 
   
   if ar[0].upper() == "!GETRATING":
-    find = users.find_one({'discord': id})
-    response = "Your Codechef Handle : **{0}** and Codeforces Handle : **{1}** has a rating of **{2}**".format(find['codechef'], find['codeforces'], find['rating'])
-    await client.send_message(message.channel, response)
-    await client.send_message(message.channel, "Query By <@{}>".format(id))
+    findc = users.find({'discord': id}).count()
+    if findc == 0:
+      await client.send_message(message.channel, "You Do Not Posess An Account Yet !")
+      await client.send_message(message.channel, "Query By <@{}>".format(id))
+    else:
+      find = users.find_one({'discord': id})
+      response = "Your Codechef Handle : **{0}** and Codeforces Handle : **{1}** has a rating of **{2}**".format(find['codechef'], find['codeforces'], find['rating'])
+      await client.send_message(message.channel, response)
+      await client.send_message(message.channel, "Query By <@{}>".format(id))
+
+  if ar[0].upper() == "!TEST":
+    for member in server.members:
+      print(member.name, *member.roles, end = ' ')
+      ll = [str(x).upper() for x in member.roles]
+      if "BOT" in ll:
+        print("YES BOT", end = ' ')
+      print("")
 
   if ar[0].upper() == "!UPDATEROLES":
+    if "496366601470345252" != str(message.author.id):
+      await client.send_message(message.channel, "You Do Not Have Admin Privilleges !")
+      return
+    await client.send_message(message.channel, "Updating The Ratings, This Might Take a While !")
+    await client.send_message(message.channel, "Query By <@{}>".format(id))
     grandmaster = []
     master = []
     expert = []
-    unassigned = []
     find = users.find().sort('rating', -1)
     for use in find:
       if len(grandmaster) < 1:
@@ -184,7 +216,8 @@ async def on_message(message):
     Expert = []
     Unassigned = []
     for i in server.members:
-      if "Bot" in i.roles:
+      ll = [str(x).upper() for x in i.roles]
+      if "BOT" in ll:
         continue
       Unassigned.append(i)
       if i.id in grandmaster:
@@ -199,17 +232,12 @@ async def on_message(message):
     role = discord.utils.get(server.roles, name = 'unassigned')
     for member in server.members:
       rem = []
-      if "admin" in member.roles:
+      ll = [str(x).upper() for x in member.roles]
+      if "BOT" in ll:
         continue
-      if "Bot" in member.roles:
-        continue 
-      if len(member.roles) == 0:
-        unassigned.append(member)
       for i in member.roles:
-        j = i
-        print(j, end = ' ')
-        if j != "@everyone" and j != "admin":
-          rem.append(j)
+        if str(i) != "admin":
+          rem.append(i)
       try:
         await client.remove_roles(member, *rem)
       except:
@@ -219,21 +247,24 @@ async def on_message(message):
       for member in Grandmaster:
         if member in Unassigned:
           Unassigned.remove(member)
+        await client.remove_roles(member, *member.roles)
         await client.add_roles(member, role)
       role = discord.utils.get(server.roles, name = 'Master')  
       for member in Master:
         if member in Unassigned:
           Unassigned.remove(member)
+        await client.remove_roles(member, *member.roles)
         await client.add_roles(member, role)
       role = discord.utils.get(server.roles, name = 'Expert')
       for member in Expert:
         if member in Unassigned:
           Unassigned.remove(member)
+        await client.remove_roles(member, *member.roles)
         await client.add_roles(member, role)
       role = discord.utils.get(server.roles, name = 'unassigned')
       for member in Unassigned:
+        await client.remove_roles(member, *member.roles)
         await client.add_roles(member, role) 
-      await client.send_message(message.channel, "Query By <@{}>".format(id))
 
 keep_alive()
 client.run("NTM1NDQ5NDI5ODY0NjExODQw.DzMRqA.9ROgoqNKXnS7fhwRDyb3ak-jGBM")

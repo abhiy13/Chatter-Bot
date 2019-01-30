@@ -11,7 +11,9 @@ db = client['chatter_bot_db']
 users = db['users']
 
 def createUser(discord_id, cci, cfi):
-  find = users.find_one({''})
+  dbc = users.find({'discord': discord_id}).count()
+  if dbc > 0:
+    return "You Already Possess an Account Kindly contact Admin !"
   c_r = cc.get_rating(cci)
   if c_r == -1:
     return "Codechef Handle Not found"
