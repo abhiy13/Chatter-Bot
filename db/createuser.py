@@ -2,9 +2,13 @@ import sys
 from pymongo import MongoClient
 from pprint import pprint
 sys.path.insert(0, '../rating_fetch/')
+sys.path.insert(0, '../')
 import cc, cf
+from env import Env
 
-MongoURI = 'mongodb://abhishek:abhishek1@ds247290.mlab.com:47290/chatter_bot_db'
+env_vars = Env()
+
+MongoURI = env_vars.get_bot_uri()
 client = MongoClient(MongoURI)
 db = client['chatter_bot_db'] 
 

@@ -1,5 +1,6 @@
 import discord
 from pymongo import MongoClient
+from env import Env
 from pprint import pprint
 from discord.ext.commands import Bot
 from discord.ext import commands
@@ -13,8 +14,9 @@ from kepp_alive import keep_alive
 
 Client = discord.Client() 
 client = commands.Bot(command_prefix = "!")
+env_vals = Env()
 
-MongoURI = 'mongodb://abhishek:abhishek1@ds247290.mlab.com:47290/chatter_bot_db'
+MongoURI = env_vals.get_bot_uri()
 clientt = MongoClient(MongoURI)
 db = clientt['chatter_bot_db'] 
 
@@ -35,7 +37,7 @@ async def on_message(message):
   if ar[0].upper() == "!HELP":
     response = "Hey, Bot this Side\nThe bot has been developed by AbhiY13 and you can contribute by heading to the github repository https://github.com/AbhiY98/chatter-Bot\n"
     response1 = "The following are some commands of this bot,\n`!pow a b` returns a^b\n`!mul args..` you can put in multiple arguments and it will multiply the values for you\n"
-    response2 = "`!fact x` returns x factorial\n`!cc handle` returns codechef rating for handle\n`!cf handle` returns codeforces rating for handle\n`!sethandle cf_handle cc_handle` registers your codechef and codeforces handles and assigns you a role\n"
+    response2 = "`!fact x` returns x factorial\n`!cc handle` returns codechef rating for handle\n`!cf handle` returns codeforces rating for handle\n`!sethandle cf_handle cc_handle` registers your codechef and codeforces handles and assigns you a role\n`!MODPOW x y MOD` return (x ^ y) % MOD"
     response3 = "`!getrating` to know your rating\n Features like updation and others will be added soon.\nIf you would like to contribute please head over to the Github Repository"
     wts = response + response1 + response2 + response3
     await client.send_message(message.channel, wts)
@@ -48,6 +50,7 @@ async def on_message(message):
     else:
       await client.send_message(message.channel, x)
       await client.send_message(message.channel, "Query By <@{}>".format(id))
+
   '''
   if(ar[0].upper() == "!HR"):
     x = hr.get_rating(ar[1])
@@ -74,6 +77,19 @@ async def on_message(message):
     await client.send_message(message.channel, math.factorial(int(ar[1]))) 
     await client.send_message(message.channel, "Query By <@{}>".format(id))
   
+  if(ar[0].upper() == "!MODPOW"):
+    x = int(ar[1]) 
+    p = int(ar[2])
+    MOD = int(ar[3])
+    ans = 1
+    while p > 0:
+      if (p % 2) == 1:
+        ans = (ans * x) % MOD
+      x = (x * x) % MOD
+      p >>= 1
+    await client.send_message(message.channel, ans) 
+    await client.send_message(message.channel, "Query By <@{}>".format(id))
+
   if(ar[0].upper() == "!MUL"):
     ans = 1
     first = 0
@@ -267,4 +283,5 @@ async def on_message(message):
         await client.add_roles(member, role) 
 
 keep_alive()
-client.run("NTM1NDQ5NDI5ODY0NjExODQw.DzMRqA.9ROgoqNKXnS7fhwRDyb3ak-jGBM")
+BOT_TOKEN = env_vals.get_bot_token()
+client.run(BOT_TOKEN)
