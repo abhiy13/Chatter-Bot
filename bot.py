@@ -37,7 +37,7 @@ async def on_message(message):
   if ar[0].upper() == "!HELP":
     response = "Hey, Bot this Side\nThe bot has been developed by AbhiY13 and you can contribute by heading to the github repository https://github.com/AbhiY98/chatter-Bot\n"
     response1 = "The following are some commands of this bot,\n`!pow a b` returns a^b\n`!mul args..` you can put in multiple arguments and it will multiply the values for you\n"
-    response2 = "`!fact x` returns x factorial\n`!cc handle` returns codechef rating for handle\n`!cf handle` returns codeforces rating for handle\n`!sethandle cf_handle cc_handle` registers your codechef and codeforces handles and assigns you a role\n`!MODPOW x y MOD` return (x ^ y) % MOD"
+    response2 = "`!fact x` returns x factorial\n`!cc handle` returns codechef rating for handle\n`!cf handle` returns codeforces rating for handle\n`!sethandle cf_handle cc_handle` registers your codechef and codeforces handles and assigns you a role\n`!MODPOW x y MOD` return (x ^ y) % MOD\n"
     response3 = "`!getrating` to know your rating\n Features like updation and others will be added soon.\nIf you would like to contribute please head over to the Github Repository"
     wts = response + response1 + response2 + response3
     await client.send_message(message.channel, wts)
