@@ -4,13 +4,13 @@ from env import Env
 from pprint import pprint
 from discord.ext.commands import Bot
 from discord.ext import commands
-import asyncio
-import time
+import asyncio, time
+import random as rd
 import math
-import sys
-sys.path.insert(0, './rating_fetch/')
-sys.path.insert(0, './db/')
 from kepp_alive import keep_alive
+
+greet = ["HEY", "HI", "HELLO", "WHAT'S UP"]
+reply = ["What's up ?", "Hello", "Didn't understand Sorry", "Hey"]
 
 Client = discord.Client() 
 client = commands.Bot(command_prefix = "!")
@@ -29,7 +29,10 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-  import cc, cf, createuser, update
+  import rating_fetch.cc as cc
+  import rating_fetch.cf as cf
+  import db.createuser as createuser
+  import db.update as update
   ar = message.content.split()
   id = message.author.id
   server = client.get_server(id="512977453061242899")
@@ -42,7 +45,7 @@ async def on_message(message):
     wts = response + response1 + response2 + response3
     await client.send_message(message.channel, wts)
   
-  if(ar[0].upper() == "!CC"):
+  if ar[0].upper() == "!CC":
     x = cc.get_rating(ar[1])
     if(x == -1) :
       await client.send_message(message.channel, "CC ID Not Found")
@@ -58,7 +61,13 @@ async def on_message(message):
     await client.send_message(message.channel, "Query By <@{}>".format(id))
   '''
 
-  if(ar[0].upper() == "!CF"):
+  if ar[0].upper in greet:
+    ret = rd.randrange(0, 4)
+    response = reply[ret]
+    await client.send_message(message.channel, response)
+    await client.send_message(message.channel, "Query By <@{}>".format(id))
+
+  if ar[0].upper() == "!CF":
     x = cf.get_rating(ar[1])
     if x == -1:
       await client.send_message(message.channel, "CF ID Not Found")      
@@ -66,18 +75,18 @@ async def on_message(message):
       await client.send_message(message.channel, x)
     await client.send_message(message.channel, "Query By <@{}>".format(id))
   
-  if(ar[0].upper() == "!POW"):
+  if ar[0].upper() == "!POW":
     if(len(ar) < 3):
       await client.send_message(message.channel, "Insuffecient Args")
       await client.send_message(message.channel, "Query By <@{}>".format(id))
     await client.send_message(message.channel, (int)(int(ar[1]) ** int(ar[2])))
     await client.send_message(message.channel, "Query By <@{}>".format(id))
   
-  if(ar[0].upper() == "!FACT"):
+  if ar[0].upper() == "!FACT":
     await client.send_message(message.channel, math.factorial(int(ar[1]))) 
     await client.send_message(message.channel, "Query By <@{}>".format(id))
   
-  if(ar[0].upper() == "!MODPOW"):
+  if ar[0].upper() == "!MODPOW":
     x = int(ar[1]) 
     p = int(ar[2])
     MOD = int(ar[3])
@@ -90,7 +99,7 @@ async def on_message(message):
     await client.send_message(message.channel, ans) 
     await client.send_message(message.channel, "Query By <@{}>".format(id))
 
-  if(ar[0].upper() == "!MUL"):
+  if ar[0].upper() == "!MUL":
     ans = 1
     first = 0
     for i in ar:
@@ -101,12 +110,12 @@ async def on_message(message):
     await client.send_message(message.channel, ans)
     await client.send_message(message.channel, "Query By <@{}>".format(id))
   
-  if(ar[0].upper() == "!REPEAT"):
+  if ar[0].upper() == "!REPEAT":
     ar = ar[1:]
     await client.send_message(message.channel, " ".join(ar))
     await client.send_message(message.channel, "Query By <@{}>".format(id))  
   
-  if(ar[0].upper() == "!SOME_ADMIN_COMMAND"):
+  if ar[0].upper() == "!SOME_ADMIN_COMMAND":
     if "512990178315468803" in [role.id for role in message.author.roles]:
       await client.send_message(message.channel, "YES you can")
     else:

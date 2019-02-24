@@ -1,0 +1,6 @@
+venv
+__pycache__
+db/__pycache__
+rating_fetch/__pycache__
+.vscode
+.idea
