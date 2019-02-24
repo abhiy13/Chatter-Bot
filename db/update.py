@@ -7,7 +7,6 @@ import cc, cf
 from env import Env
 
 env_vars = Env()
-
 MongoURI = env_vars.get_bot_uri()
 client = MongoClient(MongoURI)
 db = client['chatter_bot_db'] 
